@@ -2,13 +2,6 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
-
-function sendMessageToServer(newMessage) {
-  chattyWebSocket.send(JSON.stringify(newMessage));
-}
-
-
-
 class App extends Component {
   constructor(props) {
     super(props);
