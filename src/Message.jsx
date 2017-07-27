@@ -4,7 +4,6 @@ class Message extends Component {
 
   render() {
     const { username, content} = this.props.message;
-    console.log(this.props.message);
     if (username) {
       return (
         <div className="message">
