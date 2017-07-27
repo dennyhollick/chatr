@@ -6,7 +6,6 @@
     "lint": "eslint --ext .jsx,.js src",
     "start": "node server.js"
   },
-  
   "author": "Denny Hollick",
   "license": "MIT",
   "engines": {
@@ -29,6 +28,7 @@
     "webpack-dev-server": "2.3.0"
   },
   "dependencies": {
+    "random-animal-name-generator": "^0.1.0",
     "react": "15.4.2",
     "react-dom": "15.4.2"
   }
