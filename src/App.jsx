@@ -12,19 +12,60 @@ class App extends Component {
       messages: []
     }
     this.enterKeyPress = this.enterKeyPress.bind(this);
-    // this.componentDidMount = this.componentDidMount.bind(this);
+    this.nameKeyPress = this.nameKeyPress.bind(this);
+    this.blurSubmitName = this.blurSubmitName.bind(this);
   }
 
 
 
   enterKeyPress(event) {
     if (event.key == 'Enter') {
+      // if (this.document.getElementsByClassName("chatbar-username).value().length > 0) {
+      //   let newUser = this.event.target.value
+      //   this.setState( { 
+      //   currentUser: 
+      //     {
+      //     name: newUser
+      //     }
+      //   }
+      // )
+      // this.event.target.value = '';
+      // }
       let newMessage = {
         username: this.state.currentUser.name,
         content: event.target.value
       };
       event.target.value = '';
       this.chattyWebSocket.send(JSON.stringify(newMessage));   
+    }
+  }
+
+
+  nameKeyPress(event) {
+    if (event.key == 'Enter') {
+      let newUser = event.target.value
+      this.setState( { 
+        currentUser: 
+          {
+          name: newUser
+          }
+        }
+      )
+      event.target.value = '';
+    }
+  }
+
+    blurSubmitName(event) {
+    if (event.target.value.length > 0 ) {
+      let newUser = event.target.value
+      this.setState( { 
+        currentUser: 
+          {
+          name: newUser
+          }
+        }
+      )
+      event.target.value = '';
     }
   }
 
@@ -50,7 +91,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress}></ChatBar>
+        <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress} nameChange={this.nameKeyPress} blurSubmit={this.blurSubmitName}></ChatBar>
       </div>
     );
   }
