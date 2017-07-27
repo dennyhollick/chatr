@@ -10,8 +10,9 @@ class App extends Component {
       currentUser: {
         name: 'Bob'
       }, 
-      numUsersConnected: 0,
-      messages: []
+      totalUsers: 0,
+      userColour: '',
+      messages: [],
     }
     this.enterKeyPress = this.enterKeyPress.bind(this);
     this.nameKeyPress = this.nameKeyPress.bind(this);
@@ -25,6 +26,7 @@ class App extends Component {
       let newMessage = {
         username: this.state.currentUser.name,
         content: event.target.value,
+        colour: this.state.userColour,
         type: 'newMessage'
       };
       event.target.value = '';
@@ -84,9 +86,10 @@ class App extends Component {
         self.setState({messages: newMessages})
         }
       if (newBroadcast.type === 'systemStatus') {
-        const numUsers = newBroadcast.totalUsers;
-        console.log('Number of Users ', numUsers);
-        self.setState({numUsersConnected: numUsers})
+        const subType = newBroadcast.subType;
+        const subTypeData = newBroadcast[subType];
+        console.log({[subType]: subTypeData})
+        self.setState({[subType]: subTypeData})
       }
     };
   }
@@ -94,7 +97,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar numUsers={this.state.numUsersConnected}/>
+        <NavBar numUsers={this.state.totalUsers}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress} nameChange={this.nameKeyPress} blurSubmit={this.blurSubmitName}></ChatBar>
       </div>
