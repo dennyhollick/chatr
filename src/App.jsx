@@ -20,20 +20,10 @@ class App extends Component {
 
   enterKeyPress(event) {
     if (event.key == 'Enter') {
-      // if (this.document.getElementsByClassName("chatbar-username).value().length > 0) {
-      //   let newUser = this.event.target.value
-      //   this.setState( { 
-      //   currentUser: 
-      //     {
-      //     name: newUser
-      //     }
-      //   }
-      // )
-      // this.event.target.value = '';
-      // }
       let newMessage = {
         username: this.state.currentUser.name,
-        content: event.target.value
+        content: event.target.value,
+        type: 'newMessage'
       };
       event.target.value = '';
       this.chattyWebSocket.send(JSON.stringify(newMessage));   
@@ -43,25 +33,32 @@ class App extends Component {
 
   nameKeyPress(event) {
     if (event.key == 'Enter') {
-      let newUser = event.target.value
-      this.setState( { 
+      let newUserName = (event.target.value.length > 0) ? event.target.value : 'Anonymous';
+      let prevName = this.state.currentUser.name
+      let serverNotification = {
+        type: 'nameChange',
+        oldUsername: prevName,
+        newUserName: newUserName  
+      }
+      this.setState({ 
         currentUser: 
           {
-          name: newUser
+          name: newUserName
           }
-        }
-      )
+        })
       event.target.value = '';
+      console.log(serverNotification);
+      this.chattyWebSocket.send(JSON.stringify(serverNotification));   
     }
   }
 
     blurSubmitName(event) {
     if (event.target.value.length > 0 ) {
-      let newUser = event.target.value
+      let newUserName = event.target.value
       this.setState( { 
         currentUser: 
           {
-          name: newUser
+          name: newUserName
           }
         }
       )
@@ -79,6 +76,7 @@ class App extends Component {
     };
     this.chattyWebSocket.onmessage = function (event) {
       const newMessage = JSON.parse(event.data);
+      console.log(newMessage);
       const newMessages = self.state.messages.concat(newMessage);
       self.setState({messages: newMessages})
     };
