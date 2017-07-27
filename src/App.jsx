@@ -2,13 +2,16 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
+const generateRandomAnimalName = require('random-animal-name-generator');
+let animalName = generateRandomAnimalName();
+
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentUser: {
-        name: 'Bob'
+        name: `Anonymous ${animalName}`
       }, 
       totalUsers: 0,
       userColour: '',
@@ -18,8 +21,6 @@ class App extends Component {
     this.nameKeyPress = this.nameKeyPress.bind(this);
     this.blurSubmitName = this.blurSubmitName.bind(this);
   }
-
-
 
   enterKeyPress(event) {
     if (event.key == 'Enter') {
@@ -34,10 +35,9 @@ class App extends Component {
     }
   }
 
-
   nameKeyPress(event) {
     if (event.key == 'Enter') {
-      let newUserName = (event.target.value.length > 0) ? event.target.value : 'Anonymous';
+      let newUserName = (event.target.value.length > 0) ? event.target.value : `Anonymous ${animalName}`;
       let prevName = this.state.currentUser.name
       let serverNotification = {
         type: 'nameChange',
