@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
+import NavBar from './NavBar.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class App extends Component {
       currentUser: {
         name: 'Bob'
       }, 
+      numUsersConnected: 0,
       messages: []
     }
     this.enterKeyPress = this.enterKeyPress.bind(this);
@@ -75,19 +77,24 @@ class App extends Component {
       console.log("The connection is open"); 
     };
     this.chattyWebSocket.onmessage = function (event) {
-      const newMessage = JSON.parse(event.data);
-      console.log(newMessage);
-      const newMessages = self.state.messages.concat(newMessage);
-      self.setState({messages: newMessages})
+      const newBroadcast = JSON.parse(event.data);
+      console.log(newBroadcast);
+      if (newBroadcast.type === 'newBroadcast' || 'nameChange' || 'err') {
+        const newMessages = self.state.messages.concat(newBroadcast);
+        self.setState({messages: newMessages})
+        }
+      if (newBroadcast.type === 'systemStatus') {
+        const numUsers = newBroadcast.totalUsers;
+        console.log('Number of Users ', numUsers);
+        self.setState({numUsersConnected: numUsers})
+      }
     };
   }
 
   render() {
     return (
       <div>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
+        <NavBar numUsers={this.state.numUsersConnected}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress} nameChange={this.nameKeyPress} blurSubmit={this.blurSubmitName}></ChatBar>
       </div>
