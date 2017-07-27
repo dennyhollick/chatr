@@ -8,19 +8,14 @@ class App extends Component {
     this.state = {
       currentUser: {
         name: 'Bob'
-      }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?'
-        }, {
-          username: 'Anonymous',
-          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ]
+      }, 
+      messages: []
     }
     this.enterKeyPress = this.enterKeyPress.bind(this);
+    // this.componentDidMount = this.componentDidMount.bind(this);
   }
+
+
 
   enterKeyPress(event) {
     if (event.key == 'Enter') {
@@ -28,21 +23,25 @@ class App extends Component {
         username: this.state.currentUser.name,
         content: event.target.value
       };
-      const newMessages = this.state.messages.concat(newMessage);
-      this.setState({messages: newMessages});
       event.target.value = '';
       this.chattyWebSocket.send(JSON.stringify(newMessage));   
     }
   }
 
   componentDidMount() {
+    let self = this;
     this.chattyWebSocket = new WebSocket("ws://localhost:3001");
-    console.log("componentDidMount <App />");
-    chattyWebSocket.onopen = function (event) {
+      console.log("componentDidMount <App />");
+
+    this.chattyWebSocket.onopen = function (event) {
       console.log("The connection is open"); 
     };
+    this.chattyWebSocket.onmessage = function (event) {
+      const newMessage = JSON.parse(event.data);
+      const newMessages = self.state.messages.concat(newMessage);
+      self.setState({messages: newMessages})
+    };
   }
-
 
   render() {
     return (
