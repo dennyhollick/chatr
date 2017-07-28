@@ -4,6 +4,7 @@ import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
 import ReactDOM from 'react-dom';
 
+const sanitizer = require('sanitizer');
 const generateRandomAnimalName = require('random-animal-name-generator');
 let animalName = generateRandomAnimalName();
 
@@ -11,7 +12,7 @@ let animalName = generateRandomAnimalName();
 
 let scroll = function scrollToBottom() {
   const node = ReactDOM.findDOMNode(this.messagesEnd);
-  node.scrollIntoView({ behavior: "smooth" });
+  node.scrollIntoView({ behavior: 'smooth' });
 }
 
 
@@ -24,7 +25,12 @@ class App extends Component {
       }, 
       totalUsers: 0,
       userColour: '',
-      messages: [],
+      messages: [
+        {
+          uuid: '594203a4-ecf3-46ba-9560-48e9f959b19f',
+          content: 'We added a Giphy feature! Use \'/\' in the chatbar to get a random gif, or use \'/something\' to find a gif related to what you want!'
+        }
+      ],
       blurredNameChange: false,
     }
     this.enterKeyPressOnMessage = this.enterKeyPressOnMessage.bind(this);
@@ -35,10 +41,10 @@ class App extends Component {
   // Event Functions
 
   enterKeyPressOnMessage(event) {
-    if (event.key == 'Enter') {
+    if (event.key == 'Enter' && event.target.value.length > 0) {
       let newMessage = {
         username: this.state.currentUser.name,
-        content: event.target.value,
+        content: sanitizer.escape(event.target.value),
         colour: this.state.userColour,
         type: 'newMessage'
       };
@@ -49,7 +55,7 @@ class App extends Component {
 
   enterKeyPressOnName(event) {
     if (event.key == 'Enter') {
-      let newUserName = (event.target.value.length > 0) ? event.target.value : `Anonymous ${animalName}`;
+      let newUserName = (event.target.value.length > 0) ? sanitizer.escape(event.target.value) : `Anonymous ${animalName}`;
       let prevName = this.state.currentUser.name
       let serverNotification = {
         type: 'nameChange',
@@ -70,7 +76,7 @@ class App extends Component {
     blurSubmitName(event) {
     if (event.target.value.length > 0 ) {
       let oldUserName = this.state.currentUser.name;
-      let newUserName = event.target.value;
+      let newUserName = sanitizer.escape(event.target.value);
       this.setState( { 
         currentUser: 
           {
@@ -86,11 +92,11 @@ class App extends Component {
 
   componentDidMount() {
     let self = this;
-    this.chattyWebSocket = new WebSocket("ws://localhost:3001");
-      console.log("componentDidMount <App />");
+    this.chattyWebSocket = new WebSocket('ws://localhost:3001');
+      console.log('componentDidMount <App />');
 
     this.chattyWebSocket.onopen = function (event) {
-      console.log("The connection is open"); 
+      console.log('The connection is open'); 
     };
     this.chattyWebSocket.onmessage = function (event) {
       const newBroadcast = JSON.parse(event.data);
@@ -117,7 +123,7 @@ componentDidUpdate() {
         <NavBar numUsers={this.state.totalUsers}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPressOnMessage} nameChange={this.enterKeyPressOnName} blurSubmit={this.blurSubmitName}></ChatBar>
-        <div style={{ float:"left", clear: "both" }}
+        <div style={{ float:'left', clear: 'both' }}
              ref={(el) => { this.messagesEnd = el; }} />
       </div>
     );
