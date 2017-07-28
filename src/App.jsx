@@ -3,8 +3,12 @@ import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
 import ReactDOM from 'react-dom';
+
 const generateRandomAnimalName = require('random-animal-name-generator');
 let animalName = generateRandomAnimalName();
+
+// Function causes scroll to bottom after new content added.
+
 let scroll = function scrollToBottom() {
   const node = ReactDOM.findDOMNode(this.messagesEnd);
   node.scrollIntoView({ behavior: "smooth" });
@@ -21,13 +25,16 @@ class App extends Component {
       totalUsers: 0,
       userColour: '',
       messages: [],
+      blurredNameChange: false,
     }
-    this.enterKeyPress = this.enterKeyPress.bind(this);
-    this.nameKeyPress = this.nameKeyPress.bind(this);
+    this.enterKeyPressOnMessage = this.enterKeyPressOnMessage.bind(this);
+    this.enterKeyPressOnName = this.enterKeyPressOnName.bind(this);
     this.blurSubmitName = this.blurSubmitName.bind(this);
   }
 
-  enterKeyPress(event) {
+  // Event Functions
+
+  enterKeyPressOnMessage(event) {
     if (event.key == 'Enter') {
       let newMessage = {
         username: this.state.currentUser.name,
@@ -40,7 +47,7 @@ class App extends Component {
     }
   }
 
-  nameKeyPress(event) {
+  enterKeyPressOnName(event) {
     if (event.key == 'Enter') {
       let newUserName = (event.target.value.length > 0) ? event.target.value : `Anonymous ${animalName}`;
       let prevName = this.state.currentUser.name
@@ -60,16 +67,15 @@ class App extends Component {
     }
   }
 
-  //Send username to server
-
     blurSubmitName(event) {
     if (event.target.value.length > 0 ) {
-      let newUserName = event.target.value
+      let oldUserName = this.state.currentUser.name;
+      let newUserName = event.target.value;
       this.setState( { 
         currentUser: 
           {
-          name: newUserName
-          }
+          name: newUserName,
+          },
         }
       )
       event.target.value = '';
@@ -110,7 +116,7 @@ componentDidUpdate() {
       <div>
         <NavBar numUsers={this.state.totalUsers}/>
         <MessageList messages={this.state.messages}/>
-        <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress} nameChange={this.nameKeyPress} blurSubmit={this.blurSubmitName}></ChatBar>
+        <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPressOnMessage} nameChange={this.enterKeyPressOnName} blurSubmit={this.blurSubmitName}></ChatBar>
         <div style={{ float:"left", clear: "both" }}
              ref={(el) => { this.messagesEnd = el; }} />
       </div>
