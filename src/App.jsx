@@ -88,7 +88,7 @@ class App extends Component {
     }
   }
 
-//TODO move nested func out.
+  //Once mounted:
 
   componentDidMount() {
     let self = this;
@@ -113,9 +113,11 @@ class App extends Component {
     scroll;
   }
 
-componentDidUpdate() {
-  this.messagesEnd.scrollIntoView();
-}
+  //updates scroll on new updates
+
+  componentDidUpdate() {
+    this.messagesEnd.scrollIntoView();
+  }
 
   render() {
     return (
