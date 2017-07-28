@@ -7,7 +7,6 @@
     "start": "node server.js"
   },
   "author": "Denny Hollick",
-  "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
   },
