@@ -33,6 +33,8 @@ body {
 
 .chatbar-message {
   flex: 8;
+  word-wrap: break-word;
+
 }
 
 .chatbar-username {
