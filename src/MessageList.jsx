@@ -8,8 +8,8 @@ class MessageList extends Component {
     let lis = this
       .props
       .messages
-      .map((message, index) => {
-        return <Message key={index} message={message}/>
+      .map((message, uuid) => {
+        return <Message key={uuid} message={message}/>
 
       })
 
