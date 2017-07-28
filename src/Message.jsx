@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 
-//Set min length
-
 const gifChek =  function checkIfGif (content) {
   let type = content.split('.').pop();
-  console.log(type)
   let website = content.split('.')
-  console.log(website[1])
   if (type == 'gif' && website[1] == 'giphy') {
     return true; 
   } else {
@@ -14,12 +10,11 @@ const gifChek =  function checkIfGif (content) {
   }
 }
 
-
 class Message extends Component {
 
 
   render() {
-    const { username, content, colour} = this.props.message;
+    const { username, content, colour } = this.props.message;
     
     if (content && gifChek(content)) {
       return (
