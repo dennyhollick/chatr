@@ -2,8 +2,13 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
+import ReactDOM from 'react-dom';
 const generateRandomAnimalName = require('random-animal-name-generator');
 let animalName = generateRandomAnimalName();
+let scroll = function scrollToBottom() {
+  const node = ReactDOM.findDOMNode(this.messagesEnd);
+  node.scrollIntoView({ behavior: "smooth" });
+}
 
 
 class App extends Component {
@@ -93,7 +98,12 @@ class App extends Component {
         self.setState({[subType]: subTypeData})
       }
     };
+    scroll;
   }
+
+componentDidUpdate() {
+  this.messagesEnd.scrollIntoView();
+}
 
   render() {
     return (
@@ -101,6 +111,8 @@ class App extends Component {
         <NavBar numUsers={this.state.totalUsers}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar user={this.state.currentUser} onMessage={this.enterKeyPress} nameChange={this.nameKeyPress} blurSubmit={this.blurSubmitName}></ChatBar>
+        <div style={{ float:"left", clear: "both" }}
+             ref={(el) => { this.messagesEnd = el; }} />
       </div>
     );
   }
