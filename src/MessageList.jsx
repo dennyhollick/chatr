@@ -5,12 +5,8 @@ class MessageList extends Component {
 
   render() {
 
-    let lis = this
-      .props
-      .messages
-      .map((message, uuid) => {
-        return <Message key={uuid} message={message}/>
-
+    let lis = this.props.messages.map((message, uuid) => {
+      return <Message key={uuid} message={message}/>
       })
 
     return (
