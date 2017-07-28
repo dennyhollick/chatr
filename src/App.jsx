@@ -51,10 +51,11 @@ class App extends Component {
           }
         })
       event.target.value = '';
-      console.log(serverNotification);
       this.chattyWebSocket.send(JSON.stringify(serverNotification));   
     }
   }
+
+  //Send username to server
 
     blurSubmitName(event) {
     if (event.target.value.length > 0 ) {
@@ -70,6 +71,8 @@ class App extends Component {
     }
   }
 
+//TODO move nested func out.
+
   componentDidMount() {
     let self = this;
     this.chattyWebSocket = new WebSocket("ws://localhost:3001");
@@ -80,7 +83,6 @@ class App extends Component {
     };
     this.chattyWebSocket.onmessage = function (event) {
       const newBroadcast = JSON.parse(event.data);
-      console.log(newBroadcast);
       if (newBroadcast.type === 'newBroadcast' || 'nameChange' || 'err') {
         const newMessages = self.state.messages.concat(newBroadcast);
         self.setState({messages: newMessages})
@@ -88,7 +90,6 @@ class App extends Component {
       if (newBroadcast.type === 'systemStatus') {
         const subType = newBroadcast.subType;
         const subTypeData = newBroadcast[subType];
-        console.log({[subType]: subTypeData})
         self.setState({[subType]: subTypeData})
       }
     };
