@@ -8,7 +8,7 @@ class NavBar extends Component {
   render() {
     let numUsers = this.props.numUsers;
     return (
-      <nav className="navbar">
+      <nav className="navbar background-gradient">
         <a href="/" className="navbar-brand">Chatty</a>
         <span className="navbar-counter">Total Connected Users: {numUsers}</span>
       </nav>
